@@ -1,0 +1,40 @@
+name: any_aki
+target: any_aki
+
+models:
+  full:
+    feature_set: any_aki.full
+    artifact: models/any_aki/full.model
+    sha256: 003072956b6472b5728b30a44aa0d7f0581f10fd2f85b7acc015c26c602bffa5
+    parameters:
+      n_estimators: 392
+      learning_rate: 0.017827532372954775
+      max_depth: 8
+      subsample: 0.9347569440186626
+      colsample_bytree: 0.5535844986972426
+      scale_pos_weight: 3.1858132573158753
+
+  preoperative:
+    feature_set: any_aki.preoperative
+    artifact: models/any_aki/preoperative.model
+    sha256: 90e7b059231af83d379d0b495acbb1612c4a35d5984652a6b096e84588f4f1c7
+    parameters:
+      n_estimators: 453
+      learning_rate: 0.02930691829104399
+      max_depth: 6
+      subsample: 0.6738971910328658
+      colsample_bytree: 0.4930199861461393
+      scale_pos_weight: 1.7365161784757503
+
+  reduced:
+    feature_set: any_aki.reduced
+    artifact: models/any_aki/reduced.model
+    sha256: 34d0d185a3991104911ab6e78cbfc2b3b2c01feafa3bfd5911ab8c19aeed8123
+    # The frozen artifact preserves the published model; its original tuning log is incomplete.
+    parameters:
+      n_estimators: 678
+      learning_rate: 0.010239228368133466
+      max_depth: 6
+      subsample: 0.8916070627996842
+      colsample_bytree: 0.8569768881692591
+      scale_pos_weight: 3.4719975298471444

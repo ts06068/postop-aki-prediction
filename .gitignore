@@ -1,0 +1,30 @@
+# Keep the research workspace local and publish only the curated project files.
+/*
+!/.gitattributes
+!/.gitignore
+!/README.md
+!/environment.yml
+!/pyproject.toml
+!/requirements.txt
+!/configs/
+!/configs/**
+!/data/
+!/data/sample.xlsx
+!/models/
+!/models/**
+!/notebooks/
+!/notebooks/modeling.ipynb
+!/scripts/
+!/scripts/**
+!/src/
+!/src/**
+!/tests/
+!/tests/**
+
+# Ignore generated Python and analysis outputs inside allowed directories.
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.ruff_cache/
+**/.ipynb_checkpoints/
+**/outputs/

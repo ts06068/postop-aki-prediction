@@ -1,0 +1,9 @@
+name: postop-aki
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      # Install the pinned research dependencies and the local package.
+      - -r requirements.txt

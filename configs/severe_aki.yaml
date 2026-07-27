@@ -1,0 +1,39 @@
+name: severe_aki
+target: severe_aki
+
+models:
+  full:
+    feature_set: severe_aki.full
+    artifact: models/severe_aki/full.model
+    sha256: 1651b03635295adcf3c209b5e11f9d36fb89c817a5bb49ea84c0323d0232d7df
+    parameters:
+      n_estimators: 360
+      learning_rate: 0.03705934162533043
+      max_depth: 6
+      subsample: 0.9505517186504805
+      colsample_bytree: 0.3747643726296165
+      scale_pos_weight: 1.6940321732579642
+
+  preoperative:
+    feature_set: severe_aki.preoperative
+    artifact: models/severe_aki/preoperative.model
+    sha256: 8b67a4dba837581cdde06bc54dde00b8c8ccb92379d4884ada9e6f85d0e356eb
+    parameters:
+      n_estimators: 333
+      learning_rate: 0.024338181139347017
+      max_depth: 6
+      subsample: 0.747969286150476
+      colsample_bytree: 0.3947873272792185
+      scale_pos_weight: 5.0096250492930405
+
+  reduced:
+    feature_set: severe_aki.reduced
+    artifact: models/severe_aki/reduced.model
+    sha256: 471ed03305f5f22f4f70e983099708b7c1dbd4cc685abc556ddc82290ce8ddd9
+    parameters:
+      n_estimators: 348
+      learning_rate: 0.010534063738412106
+      max_depth: 6
+      subsample: 0.6312634845723912
+      colsample_bytree: 0.7397278742048901
+      scale_pos_weight: 2.250818836246446
