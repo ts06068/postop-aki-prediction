@@ -17,7 +17,7 @@ def main() -> None:
     args = parse_args()
     data = load_modeling_data(args.data)
     cohorts = split_cohorts(data)
-    # Report dimensions only so validation never prints patient-level values.
+    # Do not print patient-level data.
     print(f"columns={data.shape[1]}")
     print(f"internal_rows={len(cohorts.internal)}")
     print(f"external_rows={len(cohorts.external)}")

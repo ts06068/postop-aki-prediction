@@ -69,7 +69,7 @@ def train_experiment(
             prepared.internal_split.train,
             model_config.feature_set,
         )
-        # Frozen parameters reproduce the recorded run; tuning remains an opt-in path.
+        # Use recorded parameters unless tuning is explicitly requested.
         parameters = (
             tune_parameters(features, prepared.internal_split.y_train)
             if tune
@@ -118,14 +118,14 @@ def evaluate_experiment(
             model_config.artifact,
             model_dir,
         )
-        # Checksums apply to repository-frozen artifacts, not newly trained outputs.
+        # Only frozen artifacts have reference checksums.
         expected_hash = model_config.sha256 if model_dir is None else None
         model = load_frozen_model(model_path, expected_sha256=expected_hash)
 
         for validation_name, (frame, outcome) in validation_sets.items():
             features = build_model_matrix(frame, model_config.feature_set)
             probability = predict_probabilities(model, features)
-            # The manuscript optimizes Youden cutoffs separately in each cohort.
+            # Select a separate Youden threshold for each cohort.
             threshold = youden_threshold(outcome, probability)
             point = discrimination_metrics(outcome, probability)
             point.update(threshold_metrics(outcome, probability, threshold))

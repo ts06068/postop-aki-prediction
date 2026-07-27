@@ -1,4 +1,4 @@
-# Keep the research workspace local and publish only the curated project files.
+# Publish only the curated project.
 /*
 !/.gitattributes
 !/.github/
@@ -24,7 +24,7 @@
 !/tests/
 !/tests/**
 
-# Ignore generated Python and analysis outputs inside allowed directories.
+# Ignore generated Python and analysis output.
 **/__pycache__/
 **/*.py[cod]
 **/.pytest_cache/

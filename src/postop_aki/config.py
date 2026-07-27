@@ -41,7 +41,7 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
 
     models = []
     for name, values in raw["models"].items():
-        # Resolve artifact paths from the repository root, not the caller's cwd.
+        # YAML artifact paths are relative to project_root.
         models.append(
             ModelConfig(
                 name=name,

@@ -37,7 +37,7 @@ class InternalSplit:
 
 def _read_dataset(path: Path) -> pd.DataFrame:
     if path.suffix.lower() == ".csv":
-        # The completed research dataset is pipe-delimited and stores its index first.
+        # Research CSVs use '|' and store the index in column 0.
         return pd.read_csv(path, sep="|", index_col=0)
     if path.suffix.lower() == ".xlsx":
         frame = pd.read_excel(path)
@@ -75,7 +75,7 @@ def prepare_modeling_data(frame: pd.DataFrame) -> pd.DataFrame:
     if "BP_cat_hypertension" not in data or "BP_cat_hypotension" not in data:
         if "BP_cat" not in data:
             raise KeyError("BP_cat is required to create blood-pressure indicators.")
-        # Normal blood pressure remains the reference category, as in the notebooks.
+        # Encode normal blood pressure as the reference level.
         blood_pressure = data["BP_cat"].astype("string").str.strip().str.lower()
         data["BP_cat_hypertension"] = blood_pressure.eq("hypertension").astype(int)
         data["BP_cat_hypotension"] = blood_pressure.eq("hypotension").astype(int)
@@ -85,7 +85,7 @@ def prepare_modeling_data(frame: pd.DataFrame) -> pd.DataFrame:
     if missing_features:
         raise KeyError(f"Missing model features: {missing_features}")
 
-    # Explicit numeric conversion catches schema drift before a long training run.
+    # Fail immediately on nonnumeric model inputs.
     numeric_columns = sorted(required_features | required_base)
     for column in numeric_columns:
         data[column] = pd.to_numeric(data[column], errors="raise")
@@ -107,7 +107,7 @@ def make_target(data: pd.DataFrame, target: str) -> pd.Series:
     if target == "any_aki":
         outcome = data["AKI_binary"]
     elif target == "severe_aki":
-        # Severe AKI is KDIGO stage 2 or 3.
+        # Severe AKI means KDIGO stage 2 or 3.
         outcome = data["AKIStage"].gt(1).astype(int)
     else:
         raise ValueError("target must be 'any_aki' or 'severe_aki'.")

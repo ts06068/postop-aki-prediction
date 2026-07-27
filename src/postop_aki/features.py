@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 
-# Feature order is frozen because XGBoost uses column order during prediction.
+# XGBoost predictions depend on column order. Do not reorder these tuples.
 ANY_AKI_FULL = (
     "BUN_post",
     "Albumin",
@@ -252,7 +252,7 @@ def rank_features_by_mean_shap(
     """Rank columns by mean absolute SHAP value on the training set."""
     import shap
 
-    # TreeExplainer matches the selection procedure used in the original notebooks.
+    # Use TreeExplainer to match the feature-ranking procedure.
     values = np.asarray(shap.TreeExplainer(model).shap_values(features))
     importance = np.abs(values).mean(axis=0)
     return (

@@ -29,7 +29,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     config = load_experiment_config(args.config)
-    # Training writes outside the frozen models directory to preserve reference files.
+    # The default output path leaves frozen models untouched.
     artifacts = train_experiment(
         args.data,
         config,

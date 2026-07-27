@@ -11,7 +11,7 @@ import pandas as pd
 from xgboost import XGBClassifier
 
 
-MODEL_SEED = 0  # XGBoost's original implicit default, made explicit for parity.
+MODEL_SEED = 0  # Make XGBoost's implicit seed explicit.
 
 
 def build_classifier(parameters: dict[str, Any]) -> XGBClassifier:
@@ -31,7 +31,7 @@ def file_sha256(path: str | Path) -> str:
     """Calculate a model artifact checksum without loading the model."""
     digest = hashlib.sha256()
     with Path(path).open("rb") as stream:
-        # Read in chunks so checksum verification stays memory efficient.
+        # Hash in 1 MiB chunks to bound memory use.
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()

@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 class ProjectIntegrityTests(unittest.TestCase):
     def test_feature_counts_match_frozen_models(self) -> None:
-        # Each outcome keeps the manuscript variants in full/preop/reduced order.
+        # Frozen full/preoperative/reduced models require 55/37/8 features.
         expected_counts = {"full": 55, "preoperative": 37, "reduced": 8}
         for config_name in ("any_aki.yaml", "severe_aki.yaml"):
             config = load_experiment_config(PROJECT_ROOT / "configs" / config_name)

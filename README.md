@@ -2,35 +2,33 @@
 
 ## Study Objective
 
-Develop and externally validate XGBoost models for any-stage and severe postoperative AKI using full, preoperative, and reduced preoperative feature sets.
+Train and externally validate XGBoost classifiers for any-stage and severe postoperative AKI. Each outcome has full, preoperative, and reduced feature variants.
 
 ## Folder structure
 
 ```text
-.github/workflows/    GitHub Actions CI
-configs/              Outcome-specific model settings
-data/sample.xlsx      Fully synthetic 10-row schema sample
-models/               Checksum-verified frozen model artifacts
+.github/workflows/    GitHub Actions configuration
+configs/              Outcomes, parameters, artifact paths, and hashes
+data/sample.xlsx      Synthetic schema sample with 10 rows
+models/               Frozen XGBoost model artifacts
 notebooks/modeling.ipynb
-scripts/              Validation, training, and evaluation entry points
-src/postop_aki/       Reusable pipeline modules
-tests/                Metric and project-integrity tests
+scripts/              Command-line entry points
+src/postop_aki/       Data, training, and evaluation code
+tests/                Metric and repository-integrity tests
 ```
 
 ## Code structure
 
-- `config.py` and `features.py` define experiment settings and frozen feature order.
-- `data.py` validates input, derives outcomes, and creates the internal and external cohorts.
-- `models.py` and `training.py` verify, load, fit, and save XGBoost models.
-- `evaluation.py` calculates performance, calibration, bootstrap, decision-curve, subgroup, and risk-decile results.
-- `pipeline.py` connects the modules; the scripts and notebook are thin entry points.
-- `ci.yml` runs code-quality checks, sample validation, and unit tests on GitHub Actions.
+- `config.py` reads the experiment definitions. `features.py` fixes the feature order for each model.
+- `data.py` loads the dataset, checks its schema, creates outcomes, and splits hospitals 10 and 20.
+- `models.py` builds classifiers and verifies model artifacts. `training.py` owns fitting and tuning.
+- `evaluation.py` computes the reported metrics. `pipeline.py` connects the training and evaluation paths.
+- The scripts and notebook pass inputs to the pipeline. They do not duplicate pipeline logic.
+- `ci.yml` checks formatting, lint, the synthetic sample, and unit tests. It does not train models.
 
 ## Environment
 
-- Python 3.10
-- XGBoost 1.7.6
-- Package versions are pinned in `requirements.txt`.
+Use Python 3.10 and XGBoost 1.7.6. `requirements.txt` pins the remaining dependencies.
 
 ```powershell
 conda env create -f environment.yml
@@ -39,13 +37,15 @@ conda activate postop-aki
 
 ## How to run
 
-Run commands from the repository root. Validate the synthetic sample without training:
+Run every command from the repository root.
+
+Check the input schema:
 
 ```powershell
 python scripts/validate_data.py --data data/sample.xlsx
 ```
 
-Evaluate the frozen models with the private completed dataset:
+Evaluate the frozen models:
 
 ```powershell
 $dataPath = "D:\path\to\outcome_full_ml.csv"
@@ -53,14 +53,14 @@ python scripts/evaluate.py --data $dataPath --config configs/any_aki.yaml --outp
 python scripts/evaluate.py --data $dataPath --config configs/severe_aki.yaml --output outputs/severe_aki_metrics.csv
 ```
 
-Optionally retrain with the stored hyperparameters and evaluate the new artifacts:
+Train new models with the stored parameters:
 
 ```powershell
 python scripts/train.py --data $dataPath --config configs/any_aki.yaml --output-dir outputs/models
 python scripts/evaluate.py --data $dataPath --config configs/any_aki.yaml --model-dir outputs/models --output outputs/any_aki_retrained_metrics.csv
 ```
 
-Run the lightweight checks:
+Run the repository checks:
 
 ```powershell
 ruff check src scripts tests
@@ -68,4 +68,6 @@ ruff format --check src scripts tests
 python -m unittest discover -s tests -v
 ```
 
-`sample.xlsx` is for schema validation only. Published estimates require the private completed dataset; `--tune` repeats the computationally expensive five-fold search and is not part of the standard run.
+`sample.xlsx` checks the schema. It cannot reproduce the study results. Use the private completed dataset for evaluation.
+
+`--tune` runs the five-fold parameter search. It is not part of the standard run.

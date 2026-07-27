@@ -77,7 +77,7 @@ def tune_parameters(
         }
         fold_scores = []
         for train_index, validation_index in folds.split(features, outcome):
-            # Fold-local fitting prevents validation rows from entering model training.
+            # Fit inside each fold; validation rows remain unseen.
             model = build_classifier(parameters)
             model.fit(features.iloc[train_index], outcome.iloc[train_index])
             probability = model.predict_proba(features.iloc[validation_index])[:, 1]

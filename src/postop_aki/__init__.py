@@ -1,6 +1,6 @@
 """Reusable components for postoperative AKI prediction."""
 
-# Keep the package surface small; workflow details remain in their own modules.
+# Export configuration types and the loader only.
 from postop_aki.config import ExperimentConfig, ModelConfig, load_experiment_config
 
 __all__ = ["ExperimentConfig", "ModelConfig", "load_experiment_config"]

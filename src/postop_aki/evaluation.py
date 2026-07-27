@@ -148,7 +148,7 @@ def bootstrap_confidence_intervals(
     bootstrap_values = {metric: [] for metric in point_estimates}
 
     for _ in range(n_bootstrap):
-        # Redraw one-class samples because AUROC and AUPRC require both outcomes.
+        # Reject one-class resamples; AUROC is undefined for them.
         for _ in range(1_000):
             sample = rng.integers(0, outcome.size, size=outcome.size)
             if np.unique(outcome[sample]).size == 2:
@@ -187,7 +187,7 @@ def bootstrap_confidence_intervals(
 def _quantile_bin_ids(probability: np.ndarray, n_bins: int) -> np.ndarray:
     if not isinstance(n_bins, (int, np.integer)) or n_bins < 1:
         raise ValueError("n_bins must be a positive integer.")
-    # Shared quantile edges keep calibration and risk-strata binning consistent.
+    # Calibration and risk summaries use the same quantile rule.
     edges = np.quantile(probability, np.linspace(0, 1, n_bins + 1))
     return np.searchsorted(edges[1:-1], probability)
 
@@ -312,7 +312,7 @@ def evaluate_reduced_model_subgroups(
     for column in columns:
         values = subgroups[column].reset_index(drop=True)
         for level in pd.unique(values.dropna()):
-            # Predictions stay fixed; subgroup labels only select evaluation rows.
+            # Keep predictions and the threshold fixed across subgroup slices.
             mask = values.eq(level).fillna(False).to_numpy(dtype=bool)
             group_outcome = outcome[mask]
             group_probability = probability[mask]

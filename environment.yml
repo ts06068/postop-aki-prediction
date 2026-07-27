@@ -5,5 +5,5 @@ dependencies:
   - python=3.10
   - pip
   - pip:
-      # Install the pinned research dependencies and the local package.
+      # Install pinned dependencies and this package.
       - -r requirements.txt

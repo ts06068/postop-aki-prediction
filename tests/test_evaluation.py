@@ -18,7 +18,7 @@ from postop_aki.evaluation import (
 
 class EvaluationTests(unittest.TestCase):
     def test_perfect_predictions_have_perfect_performance(self) -> None:
-        # A tiny deterministic case makes expected values transparent to readers.
+        # The expected Youden cutoff is 0.8; all metrics are 1.0.
         outcome = np.array([0, 0, 1, 1])
         probability = np.array([0.1, 0.2, 0.8, 0.9])
 

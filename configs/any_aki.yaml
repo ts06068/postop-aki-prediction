@@ -30,7 +30,7 @@ models:
     feature_set: any_aki.reduced
     artifact: models/any_aki/reduced.model
     sha256: 34d0d185a3991104911ab6e78cbfc2b3b2c01feafa3bfd5911ab8c19aeed8123
-    # The frozen artifact preserves the published model; its original tuning log is incomplete.
+    # This artifact is canonical; its tuning log is incomplete.
     parameters:
       n_estimators: 678
       learning_rate: 0.010239228368133466

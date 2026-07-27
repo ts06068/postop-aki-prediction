@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
-    # CI checks code and synthetic inputs without running model training.
+    # CI does not train or evaluate models.
     steps:
       - name: Check out repository
         uses: actions/checkout@v7

@@ -44,7 +44,7 @@ def main() -> None:
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    # Persist only aggregate metrics; prediction-level rows remain local.
+    # Export aggregate metrics only; never write patient-level predictions.
     results.to_csv(output_path, index=False)
     print(output_path)
 
