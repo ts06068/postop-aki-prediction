@@ -7,14 +7,50 @@ Train and externally validate XGBoost classifiers for any-stage and severe posto
 ## Folder structure
 
 ```text
-.github/workflows/    GitHub Actions configuration
-configs/              Outcomes, parameters, artifact paths, and hashes
-data/sample.xlsx      Synthetic schema sample with 10 rows
-models/               Frozen XGBoost model artifacts
-notebooks/modeling.ipynb
-scripts/              Command-line entry points
-src/postop_aki/       Data, training, and evaluation code
-tests/                Metric and repository-integrity tests
+.
+├── .github/
+│   └── workflows/
+│       └── ci.yml                  # Run lint, sample validation, and tests
+├── configs/
+│   ├── any_aki.yaml                # Configure any-stage AKI models
+│   └── severe_aki.yaml             # Configure severe AKI models
+├── data/
+│   └── sample.xlsx                 # Provide a synthetic 10-row schema
+├── models/
+│   ├── any_aki/
+│   │   ├── full.model              # Store the frozen full model
+│   │   ├── preoperative.model      # Store the frozen preoperative model
+│   │   └── reduced.model           # Store the frozen reduced model
+│   ├── severe_aki/
+│   │   ├── full.model              # Store the frozen full model
+│   │   ├── preoperative.model      # Store the frozen preoperative model
+│   │   └── reduced.model           # Store the frozen reduced model
+│   └── SHA256SUMS                  # Record hashes for all frozen models
+├── notebooks/
+│   └── modeling.ipynb              # Walk through training and evaluation
+├── scripts/
+│   ├── evaluate.py                 # Evaluate frozen or new models
+│   ├── train.py                    # Train three variants for one outcome
+│   └── validate_data.py            # Check the input schema and cohort split
+├── src/
+│   └── postop_aki/
+│       ├── __init__.py             # Export the package API
+│       ├── config.py               # Parse experiment definitions
+│       ├── data.py                 # Load, validate, and split data
+│       ├── evaluation.py           # Compute reported metrics
+│       ├── features.py             # Fix feature order and rank features
+│       ├── models.py               # Build, verify, and save models
+│       ├── pipeline.py             # Connect training and evaluation
+│       └── training.py             # Fit models and tune parameters
+├── tests/
+│   ├── test_evaluation.py          # Test metric calculations
+│   └── test_project_integrity.py   # Test artifacts, features, and sample data
+├── .gitattributes                  # Set text and binary file handling
+├── .gitignore                      # Exclude raw data, caches, and outputs
+├── environment.yml                 # Define the Conda environment
+├── pyproject.toml                  # Define package and Ruff settings
+├── requirements.txt                # Pin Python dependencies
+└── README.md                       # Document project use
 ```
 
 ## Code structure
