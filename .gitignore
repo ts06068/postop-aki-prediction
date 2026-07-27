@@ -1,6 +1,9 @@
 # Keep the research workspace local and publish only the curated project files.
 /*
 !/.gitattributes
+!/.github/
+!/.github/workflows/
+!/.github/workflows/*.yml
 !/.gitignore
 !/README.md
 !/environment.yml

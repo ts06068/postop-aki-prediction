@@ -7,41 +7,65 @@ Develop and externally validate XGBoost models for any-stage and severe postoper
 ## Folder structure
 
 ```text
-configs/              Experiment settings for the two AKI outcomes
-data/sample.xlsx      Fully synthetic schema example
-models/               Frozen models used for prediction parity
+.github/workflows/    GitHub Actions CI
+configs/              Outcome-specific model settings
+data/sample.xlsx      Fully synthetic 10-row schema sample
+models/               Checksum-verified frozen model artifacts
 notebooks/modeling.ipynb
-scripts/              Command-line entry points
-src/postop_aki/       Reusable data, training, and evaluation modules
-tests/                 Lightweight unit tests
+scripts/              Validation, training, and evaluation entry points
+src/postop_aki/       Reusable pipeline modules
+tests/                Metric and project-integrity tests
 ```
 
 ## Code structure
 
-`data.py` loads and splits cohorts, `features.py` preserves the final feature order, `models.py` builds or loads XGBoost models, and `training.py` handles fitting and optional tuning. `pipeline.py` connects those steps, while `evaluation.py` calculates the manuscript-specified metrics. The notebook only orchestrates these modules.
+- `config.py` and `features.py` define experiment settings and frozen feature order.
+- `data.py` validates input, derives outcomes, and creates the internal and external cohorts.
+- `models.py` and `training.py` verify, load, fit, and save XGBoost models.
+- `evaluation.py` calculates performance, calibration, bootstrap, decision-curve, subgroup, and risk-decile results.
+- `pipeline.py` connects the modules; the scripts and notebook are thin entry points.
+- `ci.yml` runs code-quality checks, sample validation, and unit tests on GitHub Actions.
 
 ## Environment
 
-Python 3.10 and XGBoost 1.7.6 are used to match the manuscript environment.
+- Python 3.10
+- XGBoost 1.7.6
+- Package versions are pinned in `requirements.txt`.
 
-```bash
+```powershell
 conda env create -f environment.yml
 conda activate postop-aki
 ```
 
 ## How to run
 
-Validate the synthetic sample without training:
+Run commands from the repository root. Validate the synthetic sample without training:
 
-```bash
+```powershell
 python scripts/validate_data.py --data data/sample.xlsx
 ```
 
-Keep the private completed dataset outside Git and pass its local path explicitly:
+Evaluate the frozen models with the private completed dataset:
 
-```bash
-python scripts/evaluate.py --data outcome_full_ml.csv --config configs/any_aki.yaml
-python scripts/train.py --data outcome_full_ml.csv --config configs/severe_aki.yaml
+```powershell
+$dataPath = "D:\path\to\outcome_full_ml.csv"
+python scripts/evaluate.py --data $dataPath --config configs/any_aki.yaml --output outputs/any_aki_metrics.csv
+python scripts/evaluate.py --data $dataPath --config configs/severe_aki.yaml --output outputs/severe_aki_metrics.csv
 ```
 
-`sample.xlsx` is for schema checks only; published estimates require the original completed dataset.
+Optionally retrain with the stored hyperparameters and evaluate the new artifacts:
+
+```powershell
+python scripts/train.py --data $dataPath --config configs/any_aki.yaml --output-dir outputs/models
+python scripts/evaluate.py --data $dataPath --config configs/any_aki.yaml --model-dir outputs/models --output outputs/any_aki_retrained_metrics.csv
+```
+
+Run the lightweight checks:
+
+```powershell
+ruff check src scripts tests
+ruff format --check src scripts tests
+python -m unittest discover -s tests -v
+```
+
+`sample.xlsx` is for schema validation only. Published estimates require the private completed dataset; `--tune` repeats the computationally expensive five-fold search and is not part of the standard run.
